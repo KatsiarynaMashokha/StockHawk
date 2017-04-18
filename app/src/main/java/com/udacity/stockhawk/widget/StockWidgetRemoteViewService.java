@@ -8,9 +8,11 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
-import com.udacity.stockhawk.data.Contract.Quote;
+import com.udacity.stockhawk.data.Contract;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * Created by katsiarynamashokha on 4/4/17.
@@ -27,6 +29,11 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             @Override
             public void onCreate() {
                 // Nothing to do
+                final long identityToken = Binder.clearCallingIdentity();
+                data = getQuery();
+
+                Binder.restoreCallingIdentity(identityToken);
+
             }
 
             @Override
@@ -39,15 +46,19 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
-                List<String> stockList = Quote.QUOTE_COLUMNS;
+                ArrayList<String> stockList = new ArrayList<>();
+                stockList.add(Contract.Quote.COLUMN_SYMBOL);
+                stockList.add(Contract.Quote.COLUMN_PRICE);
+                stockList.add(Contract.Quote.COLUMN_ABSOLUTE_CHANGE);
                 String[] stockArray = new String[stockList.size()];
                 stockArray = stockList.toArray(stockArray);
+
                 data = getContentResolver().query(
-                        Quote.URI,
+                        Contract.Quote.URI,
                         stockArray,
                         null,
                         null,
-                        Quote.COLUMN_SYMBOL);
+                        null);
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -73,18 +84,43 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.stock_widget_detail_list_item);
 
-                String stockSymbol = data.getString(Quote.POSITION_SYMBOL);
-                Float stockPrice = data.getFloat(Quote.POSITION_PRICE);
-                Float absoluteStockChange = data.getFloat(Quote.POSITION_ABSOLUTE_CHANGE);
+
+                String stockSymbol = data.getString(Contract.Quote.POSITION_SYMBOL - 1);
+                Float stockPrice = data.getFloat(Contract.Quote.POSITION_PRICE - 1);
+                Float absoluteStockChange = data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE - 1);
+
 
                 views.setTextViewText(R.id.stock_name, stockSymbol);
-                views.setTextViewText(R.id.stock_price, stockPrice.toString());
-                views.setTextViewText(R.id.stock_change, absoluteStockChange.toString());
+                views.setTextViewText(R.id.stock_price, getCurrencySymbol() + stockPrice.toString());
+                views.setContentDescription(R.id.stock_price, getString(R.string.stock_price_desc) + stockPrice);
+                views.setTextViewText(R.id.stock_change, getCurrencySymbol() + absoluteStockChange.toString());
+                if (absoluteStockChange >=0) {
+                    views.setContentDescription(R.id.stock_change, getString(R.string.stock_increase_desc) + absoluteStockChange.toString());
+                }
+                else {
+                    views.setContentDescription(R.id.stock_change, getString(R.string.stock_decrease_desc) + absoluteStockChange.toString());
+                }
 
                 final Intent fillIntent = new Intent();
-                fillIntent.setData(Quote.makeUriForStock(stockSymbol));
+                fillIntent.setData(Contract.Quote.makeUriForStock(stockSymbol));
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillIntent);
                 return views;
+            }
+
+            private Cursor getQuery() {
+                ArrayList<String> stockList = new ArrayList<>();
+                stockList.add(Contract.Quote.COLUMN_SYMBOL);
+                stockList.add(Contract.Quote.COLUMN_PRICE);
+                stockList.add(Contract.Quote.COLUMN_ABSOLUTE_CHANGE);
+                String[] stockArray = new String[stockList.size()];
+                stockArray = stockList.toArray(stockArray);
+
+              return getContentResolver().query(
+                        Contract.Quote.URI,
+                        stockArray,
+                        null,
+                        null,
+                        null);
             }
 
             @Override
@@ -110,4 +146,11 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             }
         };
     }
+    public String getCurrencySymbol() {
+        Locale locale = new Locale("en", "US");
+        Currency currency= Currency.getInstance(locale);
+        return currency.getSymbol();
+    }
 }
+
+

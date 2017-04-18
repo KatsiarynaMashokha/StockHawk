@@ -39,25 +39,36 @@ public class DetailActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stock_details);
-        stockUri = Uri.parse(getIntent().getStringExtra(MainActivity.STOCK_KEY));
+        Uri dataUri = getIntent().getData();
+        if (dataUri == null) {
+            stockUri = Contract.Quote.makeUriForStock(getIntent().getStringExtra(MainActivity.STOCK_KEY));
+
+        }
+        else {
+            stockUri = dataUri;
+        }
         lineChart = (LineChart) findViewById(chart);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this,
-                stockUri,
-                null,
-                null,
-                null,
-                null);
+        if (stockUri != null) {
+            return new CursorLoader(this,
+                    stockUri,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
+        return null;
     }
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data.getCount() != 0)
+        if (data.getCount() != 0) {
+            mCursor = data;
             drawChart();
+        }
     }
 
     @Override

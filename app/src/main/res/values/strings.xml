@@ -3,23 +3,21 @@
 
     <string name="pref_stocks_initialized_key" translatable="false">initialized</string>
 
-    <string name="pref_stocks_key">stocks</string>
+    <string name="pref_stocks_key" translatable="false">stocks</string>
 
 
-    <string name="pref_display_mode_key">displayMode</string>
-    <string name="pref_display_mode_default">@string/pref_display_mode_percentage_key</string>
+    <string name="pref_display_mode_key" translatable="false">displayMode</string>
+    <string name="pref_display_mode_default" translatable="false">@string/pref_display_mode_percentage_key</string>
 
-    <string name="pref_display_mode_absolute_key">absolute</string>
-    <string name="pref_display_mode_percentage_key">percentage</string>
+    <string name="pref_display_mode_absolute_key" translatable="false">absolute</string>
+    <string name="pref_display_mode_percentage_key" translatable="false">percentage</string>
 
-    <string name="default_stocks_yahoo">YHOO</string>
-    <string name="default_stocks_apple">AAPL</string>
-    <string name="default_stocks_microsoft">MSFT</string>
-    <string name="default_stocks_facebook">FB</string>
+    <string name="default_stocks_yahoo" translatable="false">YHOO</string>
+    <string name="default_stocks_apple" translatable="false">AAPL</string>
+    <string name="default_stocks_microsoft" translatable="false">MSFT</string>
+    <string name="default_stocks_facebook" translatable="false">FB</string>
 
-
-    <string name="action_change_units">@string/pref_display_mode_key</string>
-
+    <string name="action_change_units" translatable="false">@string/pref_display_mode_key</string>
 
     <string name="dialog_title">Add Stock</string>
     <string name="dialog_hint">Symbol (e.g. GOOG)</string>
@@ -35,10 +33,21 @@
     <!-- Message for invalid stock -->
     <string name="invalid_stock">Invalid stock:</string>
 
-    <!-- Activity with stock graph -->
-    <string name="stock_graph">Stock graph</string>
-
     <!-- Strings for the widget -->
     <string name="stock_details">Stock Details</string>
+
+    <!-- Label for stock graph -->
+    <string name="stock_graph">Stock graph</string>
+
+    <!-- Content descriptions for buttons -->
+    <string name="add_new_stock">Add new stock</string>
+    <string name="stock_price_desc">Stock price is %s</string>
+    <string name="stock_increase_desc">Stock price increased by %s</string>
+    <string name="stock_decrease_desc">Stock price decreased by %s</string>
+    <string name="stock_change_mode">The current mode is %s</string>
+    <string name="widget_desc">Stock Hawk widget</string>
+
+    <!-- Empty widget message -->
+    <string name="empty_widget">No Stock Info Available</string>
 
 </resources>
