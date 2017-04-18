@@ -28,8 +28,9 @@ public class StockWidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stock_widget);
 
+
             // Create an Intent to launch DetailActivity
-            Intent intent = new Intent(context, DetailActivity.class);
+            Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
@@ -40,21 +41,18 @@ public class StockWidgetProvider extends AppWidgetProvider {
             else {
                 setRemoteAdapterV11(context, views);
             }
-            boolean useDetailActivity = context.getResources()
-                    .getBoolean(R.bool.use_detail_activity);
-            Intent clickIntentTemplate = useDetailActivity
-                    ? new Intent(context, DetailActivity.class)
-                    : new Intent(context, MainActivity.class);
+            Intent clickIntentTemplate  = new Intent(context, DetailActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
             views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
             views.setEmptyView(R.id.widget_list, R.id.widget_empty);
-
+            views.setContentDescription(R.id.widget_list, context.getString(R.string.widget_desc));
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -64,7 +62,6 @@ public class StockWidgetProvider extends AppWidgetProvider {
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-
         }
     }
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

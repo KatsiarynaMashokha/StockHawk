@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
+    public static final String STOCK_KEY = "stock";
     private static final int STOCK_LOADER = 0;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
@@ -44,14 +45,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.error)
     TextView error;
     private StockAdapter adapter;
-    public static final String STOCK_KEY = "stock";
 
     @Override
     public void onClick(String symbol) {
         Timber.d("Symbol clicked: %s", symbol);
-        String stringUri = Contract.Quote.makeUriForStock(symbol).toString();
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(STOCK_KEY, stringUri);
+        intent.putExtra(STOCK_KEY, symbol);
         startActivity(intent);
     }
 
@@ -86,11 +85,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(stockRecyclerView);
-
-
-
-
-
     }
 
     private boolean networkUp() {
@@ -192,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             PrefUtils.toggleDisplayMode(this);
             setDisplayModeMenuItemIcon(item);
             adapter.notifyDataSetChanged();
+            findViewById(R.id.action_change_units)
+            .announceForAccessibility(String.format(getString(R.string.stock_change_mode),
+                    PrefUtils.getDisplayMode(this)));
             return true;
         }
         return super.onOptionsItemSelected(item);

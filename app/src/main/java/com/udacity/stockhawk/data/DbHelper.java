@@ -13,7 +13,6 @@ class DbHelper extends SQLiteOpenHelper {
     private static final String NAME = "StockHawk.db";
     private static final int VERSION = 1;
 
-
     DbHelper(Context context) {
         super(context, NAME, null, VERSION);
     }
@@ -30,7 +29,6 @@ class DbHelper extends SQLiteOpenHelper {
                 + "UNIQUE (" + Quote.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         db.execSQL(builder);
-
     }
 
     @Override

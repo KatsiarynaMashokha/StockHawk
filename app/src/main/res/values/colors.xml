@@ -8,4 +8,9 @@
     <color name="material_red_700">#D50000</color>
     <color name="material_green_700">#00C853</color>
 
+    <!-- Widget colors -->
+    <color name="widget_text_title">#F50057</color>
+    <color name="widget_title_background">#E0E0E0</color>
+    <color name="widget_font_color">#000000</color>
+
 </resources>

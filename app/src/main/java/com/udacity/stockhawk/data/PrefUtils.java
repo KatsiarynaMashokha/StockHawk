@@ -34,7 +34,6 @@ public final class PrefUtils {
             return defaultStocks;
         }
         return prefs.getStringSet(stocksKey, new HashSet<String>());
-
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
@@ -87,6 +86,4 @@ public final class PrefUtils {
 
         editor.apply();
     }
-
-
 }

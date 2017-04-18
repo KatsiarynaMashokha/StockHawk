@@ -1,3 +1,9 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
+
+    <!-- Widget dimensions -->
+    <dimen name="min_height">120dp</dimen>
+    <dimen name="min_width">250dp</dimen>
+    <dimen name="min_resize_height">180dp</dimen>
+    <dimen name="min_resize_width">220dp</dimen>
 </resources>
